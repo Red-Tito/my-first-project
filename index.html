@@ -503,6 +503,263 @@
       font-size: 0.8rem;
     }
 
+    /* ─── ARC SECTION ────────────────────────────────── */
+    .arc-hero {
+      background: linear-gradient(135deg, #0d1b2a 0%, #0a1f12 50%, #0d1b2a 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+    }
+    .arc-hero .inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 0;
+    }
+    .arc-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(39,174,96,0.12);
+      border: 1px solid rgba(39,174,96,0.35);
+      color: #2ecc71;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.9rem;
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+    }
+    .arc-badge::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #2ecc71;
+      animation: pulse-green 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse-green {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+    .arc-title {
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .arc-title .arc-name {
+      color: #2ecc71;
+      font-style: italic;
+    }
+    .arc-intro {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin-bottom: 3rem;
+      line-height: 1.7;
+    }
+    .arc-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 2rem;
+      align-items: start;
+    }
+    @media (max-width: 900px) { .arc-layout { grid-template-columns: 1fr; } }
+
+    /* ARC role diagram */
+    .arc-diagram {
+      background: var(--navy-mid);
+      border: 1px solid rgba(39,174,96,0.2);
+      border-radius: 12px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+    .arc-node-group {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .arc-node {
+      background: var(--navy-light);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.4rem 0.85rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .arc-node.green {
+      border-color: #2ecc71;
+      color: #2ecc71;
+      background: rgba(39,174,96,0.08);
+      font-weight: 700;
+    }
+    .arc-node.center {
+      font-size: 1rem;
+      padding: 0.65rem 1.4rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+    }
+    .arc-connector {
+      width: 2px;
+      height: 28px;
+      background: rgba(39,174,96,0.3);
+      position: relative;
+      margin: 0 auto;
+    }
+    .arc-connector::after {
+      content: '▼';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(39,174,96,0.5);
+      font-size: 0.6rem;
+    }
+    .arc-diagram-label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+
+    /* ARC operator guide */
+    .arc-guide {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .arc-guide-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #2ecc71;
+      margin-bottom: 0.25rem;
+    }
+    .arc-step {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-left: 3px solid #2ecc71;
+      border-radius: 0 8px 8px 0;
+      padding: 1rem 1.1rem;
+    }
+    .arc-step-header {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-bottom: 0.4rem;
+    }
+    .arc-step-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(39,174,96,0.2);
+      border: 1px solid rgba(39,174,96,0.4);
+      color: #2ecc71;
+      font-size: 0.68rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .arc-step-name {
+      font-weight: 700;
+      font-size: 0.88rem;
+    }
+    .arc-step-timing {
+      margin-left: auto;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .arc-step-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ARC features strip */
+    .arc-features {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 3rem;
+    }
+    .arc-feature {
+      background: rgba(39,174,96,0.05);
+      border: 1px solid rgba(39,174,96,0.15);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .arc-feature-icon {
+      font-size: 1.4rem;
+      margin-bottom: 0.6rem;
+    }
+    .arc-feature-title {
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 0.35rem;
+      color: #2ecc71;
+    }
+    .arc-feature-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ARC connections table */
+    .arc-connections {
+      margin-top: 2.5rem;
+    }
+    .arc-conn-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #2ecc71;
+      margin-bottom: 1rem;
+    }
+    .arc-conn-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 0.75rem;
+    }
+    .arc-conn-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.1rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+    }
+    .conn-dir {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+    .conn-dir.in { background: rgba(26,115,200,0.2); color: #7ab8f5; }
+    .conn-dir.out { background: rgba(39,174,96,0.2); color: #2ecc71; }
+    .conn-system { font-weight: 700; font-size: 0.85rem; margin-bottom: 0.2rem; }
+    .conn-detail { font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; }
+
     /* ─── RESPONSIVE ──────────────────────────────────── */
     @media (max-width: 768px) {
       nav .inner { gap: 0.2rem; }
@@ -517,6 +774,7 @@
 <nav>
   <div class="inner">
     <div class="logo">CH<span>12</span> ELECTIONS</div>
+    <a href="#arc" style="color:#2ecc71;font-weight:700;">ARC</a>
     <a href="#architecture">Architecture</a>
     <a href="#components">Components</a>
     <a href="#signal-flow">Signal Flow</a>
@@ -551,6 +809,205 @@
   </div>
 </div>
 
+<!-- ARC MAIN PLAYER -->
+<div class="arc-hero" id="arc">
+  <div class="inner">
+
+    <div class="arc-badge">Main Player</div>
+    <h2 class="arc-title">How to use <span class="arc-name">ARC</span><br>as the central results engine</h2>
+    <p class="arc-intro">
+      ARC (Automated Results Controller) is the nerve centre of the election night broadcast. It sits between the raw electoral data feed and every on-air graphics system, normalising results, triggering templates, and keeping the whole production in sync — without requiring a graphics operator to manually fire every update.
+    </p>
+
+    <div class="arc-layout">
+
+      <!-- Role diagram + step guide -->
+      <div>
+        <!-- Operator step-by-step -->
+        <div class="arc-guide-title">Operator Guide — Election Night</div>
+        <div class="arc-guide">
+
+          <div class="arc-step">
+            <div class="arc-step-header">
+              <div class="arc-step-num">1</div>
+              <div class="arc-step-name">Load the Election Project</div>
+              <div class="arc-step-timing">T–4 h</div>
+            </div>
+            <div class="arc-step-desc">Open ARC and select the election project file. Verify that all constituency IDs, party colour mappings, and seat thresholds are correctly configured. Import the current candidate list from the electoral commission CSV or API endpoint.</div>
+          </div>
+
+          <div class="arc-step">
+            <div class="arc-step-header">
+              <div class="arc-step-num">2</div>
+              <div class="arc-step-name">Connect the Data Feed</div>
+              <div class="arc-step-timing">T–2 h</div>
+            </div>
+            <div class="arc-step-desc">In ARC's Data Source panel, point the REST connector at the electoral commission live feed URL. Set the polling interval to 60 s pre-close and 15 s once polls close. Run a dry-fire test using last election's data to confirm all graphic templates populate correctly.</div>
+          </div>
+
+          <div class="arc-step">
+            <div class="arc-step-header">
+              <div class="arc-step-num">3</div>
+              <div class="arc-step-name">Assign Graphics Outputs</div>
+              <div class="arc-step-timing">T–2 h</div>
+            </div>
+            <div class="arc-step-desc">Map each ARC template type to its target output: seat-count full-screens → Viz Trio channel A; lower-third ticker → Viz Trio channel B; national map → Touchscreen Data Wall engine; social card export → file drop folder for the digital team. Test all mappings with the cue preview mode.</div>
+          </div>
+
+          <div class="arc-step">
+            <div class="arc-step-header">
+              <div class="arc-step-num">4</div>
+              <div class="arc-step-name">Arm Auto-Trigger Rules</div>
+              <div class="arc-step-timing">T–30 min</div>
+            </div>
+            <div class="arc-step-desc">Configure ARC's trigger logic: auto-fire a full-screen result graphic whenever a constituency declares, auto-update the running total bar on every data poll, and alert the director via tally light when a seat changes party. Set the "sensitivity" threshold to avoid false triggers from partial-count updates.</div>
+          </div>
+
+          <div class="arc-step">
+            <div class="arc-step-header">
+              <div class="arc-step-num">5</div>
+              <div class="arc-step-name">Go Live — Monitor &amp; Override</div>
+              <div class="arc-step-timing">Live night</div>
+            </div>
+            <div class="arc-step-desc">Once polls close, ARC runs autonomously — updating lower-thirds and maps with each data poll. The ARC operator sits on a secondary screen monitoring the queue. For urgent editorial overrides (e.g. hold a result the channel isn't yet ready to call), use the <strong>Hold</strong> button to pause auto-fire on a specific constituency without disrupting the rest of the queue.</div>
+          </div>
+
+          <div class="arc-step">
+            <div class="arc-step-header">
+              <div class="arc-step-num">6</div>
+              <div class="arc-step-name">Final Seat — End-of-Night Package</div>
+              <div class="arc-step-timing">Last result</div>
+            </div>
+            <div class="arc-step-desc">When the final seat is called, trigger ARC's "End-of-Night" macro: this fires the full national summary full-screen, exports a hi-res static results image for social, and writes the final JSON results file to the archive NAS. Log off the live data feed and save the session file for the post-mortem.</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Role diagram -->
+      <div>
+        <div class="arc-diagram">
+          <div class="arc-node-group">
+            <div class="arc-node">Electoral Commission API</div>
+            <div class="arc-node">Social Media Feed</div>
+          </div>
+          <div class="arc-connector"></div>
+          <div class="arc-node-group">
+            <div class="arc-node green center">ARC</div>
+          </div>
+          <div class="arc-connector"></div>
+          <div class="arc-node-group">
+            <div class="arc-node">Viz Trio</div>
+            <div class="arc-node">Data Wall</div>
+            <div class="arc-node">Social Export</div>
+          </div>
+          <div class="arc-connector"></div>
+          <div class="arc-node-group">
+            <div class="arc-node">ATEM (fill + key)</div>
+          </div>
+          <div class="arc-connector"></div>
+          <div class="arc-node-group">
+            <div class="arc-node">On-Air</div>
+          </div>
+          <div class="arc-diagram-label">ARC sits at the centre of<br>every results data path</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Feature grid -->
+    <div class="arc-features">
+      <div class="arc-feature">
+        <div class="arc-feature-icon">⚡</div>
+        <div class="arc-feature-title">Automatic Result Triggers</div>
+        <div class="arc-feature-desc">Fires the right graphic the moment a result lands in the data feed — no manual operator needed for routine declarations.</div>
+      </div>
+      <div class="arc-feature">
+        <div class="arc-feature-icon">🗂️</div>
+        <div class="arc-feature-title">Multi-Output Routing</div>
+        <div class="arc-feature-desc">Sends different graphic types to different outputs simultaneously — Viz Trio, touchscreen wall, and social export all from one cue.</div>
+      </div>
+      <div class="arc-feature">
+        <div class="arc-feature-icon">✋</div>
+        <div class="arc-feature-title">Editorial Hold &amp; Override</div>
+        <div class="arc-feature-desc">Editors can hold a result from going on-air while the channel confirms the call, without disrupting the rest of the queue.</div>
+      </div>
+      <div class="arc-feature">
+        <div class="arc-feature-icon">🔄</div>
+        <div class="arc-feature-title">Live Data Normalisation</div>
+        <div class="arc-feature-desc">Cleans and standardises raw electoral data — handles partial counts, recount flags, and late corrections before they reach graphics.</div>
+      </div>
+      <div class="arc-feature">
+        <div class="arc-feature-icon">🗺️</div>
+        <div class="arc-feature-title">Map &amp; Running Total Sync</div>
+        <div class="arc-feature-desc">Keeps the national map, seat counters, and vote-share charts in sync automatically on every polling cycle.</div>
+      </div>
+      <div class="arc-feature">
+        <div class="arc-feature-icon">📤</div>
+        <div class="arc-feature-title">Social &amp; Archive Export</div>
+        <div class="arc-feature-desc">Auto-generates formatted result cards for social platforms and writes the final results JSON to archive at end-of-night.</div>
+      </div>
+    </div>
+
+    <!-- System connections -->
+    <div class="arc-connections">
+      <div class="arc-conn-title">ARC System Connections</div>
+      <div class="arc-conn-grid">
+
+        <div class="arc-conn-card">
+          <div class="conn-dir in">IN</div>
+          <div>
+            <div class="conn-system">Electoral Commission API</div>
+            <div class="conn-detail">REST/JSON polled every 15–60 s. ARC normalises constituency codes, candidate names, and vote totals.</div>
+          </div>
+        </div>
+
+        <div class="arc-conn-card">
+          <div class="conn-dir in">IN</div>
+          <div>
+            <div class="conn-system">Rundown System (Mosart)</div>
+            <div class="conn-detail">ARC receives segment cues from Viz Mosart so graphics fire in sync with the programme rundown.</div>
+          </div>
+        </div>
+
+        <div class="arc-conn-card">
+          <div class="conn-dir out">OUT</div>
+          <div>
+            <div class="conn-system">Viz Trio (Channel A &amp; B)</div>
+            <div class="conn-detail">Full-screen result packs and lower-thirds fired via Viz Trio's MOS/TCP command interface.</div>
+          </div>
+        </div>
+
+        <div class="arc-conn-card">
+          <div class="conn-dir out">OUT</div>
+          <div>
+            <div class="conn-system">Touchscreen Data Wall</div>
+            <div class="conn-detail">ARC pushes updated map and chart data as JSON to the wall's local web app on each poll cycle.</div>
+          </div>
+        </div>
+
+        <div class="arc-conn-card">
+          <div class="conn-dir out">OUT</div>
+          <div>
+            <div class="conn-system">Social Export Folder</div>
+            <div class="conn-detail">Rendered PNG/MP4 result cards dropped to a watched folder; digital team's CMS picks them up automatically.</div>
+          </div>
+        </div>
+
+        <div class="arc-conn-card">
+          <div class="conn-dir out">OUT</div>
+          <div>
+            <div class="conn-system">Archive NAS</div>
+            <div class="conn-detail">Final results JSON and session log written at end-of-night for compliance and post-broadcast analysis.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <!-- ARCHITECTURE -->
 <section id="architecture">
   <h2><span class="accent">01.</span> System Architecture</h2>
@@ -578,6 +1035,15 @@
           <div class="node blue">ATEM Constellation 8K (Vision Mixer)</div>
           <div class="node blue">HyperDeck Studio (Recording)</div>
           <div class="node blue">Election Data Aggregator</div>
+        </div>
+      </div>
+
+      <div class="arch-arrow">↓</div>
+
+      <div class="arch-layer">
+        <div class="layer-label">Results Engine</div>
+        <div class="layer-nodes">
+          <div class="node" style="border-color:#2ecc71;color:#2ecc71;font-weight:700;">ARC — Automated Results Controller</div>
         </div>
       </div>
 
