@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Channel 12 — Election Broadcast Technology</title>
+  <style>
+    :root {
+      --red: #c0392b;
+      --dark-red: #922b21;
+      --navy: #0d1b2a;
+      --navy-mid: #1b2b3a;
+      --navy-light: #243447;
+      --blue-accent: #1a73c8;
+      --gold: #e8b84b;
+      --text: #e8edf2;
+      --text-muted: #8fa3b8;
+      --border: rgba(255,255,255,0.08);
+      --card-bg: rgba(255,255,255,0.04);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--navy);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ─── NAV ─────────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13,27,42,0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+    }
+    nav .inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      height: 56px;
+    }
+    nav .logo {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--red);
+      letter-spacing: 0.05em;
+      margin-right: auto;
+      white-space: nowrap;
+    }
+    nav .logo span { color: var(--text); }
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 0.3rem 0.7rem;
+      border-radius: 4px;
+      transition: color 0.2s, background 0.2s;
+      white-space: nowrap;
+    }
+    nav a:hover { color: var(--text); background: var(--card-bg); }
+
+    /* ─── HERO ────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, #0d1b2a 0%, #1a1040 50%, #0d1b2a 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(192,57,43,0.18) 0%, transparent 70%);
+    }
+    .hero-tag {
+      display: inline-block;
+      background: var(--red);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.8rem;
+      border-radius: 3px;
+      margin-bottom: 1.2rem;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    .hero h1 em { color: var(--red); font-style: normal; }
+    .hero p {
+      max-width: 640px;
+      margin: 0 auto 2rem;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      position: relative;
+    }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+      position: relative;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat .num {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--gold);
+    }
+    .hero-stat .label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ─── SECTIONS ────────────────────────────────────── */
+    section {
+      padding: 4rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    section + section { border-top: 1px solid var(--border); }
+
+    h2 {
+      font-size: 1.7rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.4rem;
+    }
+    h2 .accent { color: var(--red); }
+    .section-sub {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ─── ARCHITECTURE DIAGRAM ────────────────────────── */
+    .arch-diagram {
+      background: var(--navy-mid);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2.5rem 2rem;
+      overflow-x: auto;
+    }
+    .arch-layers {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      min-width: 700px;
+    }
+    .arch-layer {
+      display: flex;
+      align-items: stretch;
+      gap: 0.75rem;
+    }
+    .layer-label {
+      width: 120px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-align: right;
+      padding-right: 0.75rem;
+      border-right: 2px solid var(--border);
+    }
+    .layer-nodes {
+      flex: 1;
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .node {
+      background: var(--navy-light);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.45rem 0.85rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      white-space: nowrap;
+      position: relative;
+    }
+    .node.primary { border-color: var(--red); color: #fff; }
+    .node.highlight { border-color: var(--gold); color: var(--gold); }
+    .node.blue { border-color: var(--blue-accent); color: #7ab8f5; }
+
+    .arch-arrow {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      margin: -0.25rem 0;
+    }
+
+    /* ─── COMPONENTS GRID ─────────────────────────────── */
+    .components-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.25rem;
+    }
+    .component-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      transition: border-color 0.2s;
+    }
+    .component-card:hover { border-color: rgba(255,255,255,0.18); }
+    .comp-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .comp-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .comp-icon.red { background: rgba(192,57,43,0.2); }
+    .comp-icon.blue { background: rgba(26,115,200,0.2); }
+    .comp-icon.gold { background: rgba(232,184,75,0.2); }
+    .comp-icon.green { background: rgba(39,174,96,0.2); }
+    .comp-icon.purple { background: rgba(142,68,173,0.2); }
+    .comp-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      line-height: 1.3;
+    }
+    .comp-vendor {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+    }
+    .comp-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+    .comp-price {
+      display: inline-block;
+      background: rgba(232,184,75,0.12);
+      color: var(--gold);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.2rem 0.65rem;
+      border-radius: 4px;
+    }
+    .comp-tag {
+      display: inline-block;
+      background: rgba(26,115,200,0.12);
+      color: #7ab8f5;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.15rem 0.55rem;
+      border-radius: 3px;
+      margin-left: 0.4rem;
+    }
+
+    /* ─── SIGNAL FLOW TABLE ───────────────────────────── */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    thead th {
+      background: var(--navy-light);
+      padding: 0.85rem 1.1rem;
+      text-align: left;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,0.025); }
+    tbody td {
+      padding: 0.85rem 1.1rem;
+      vertical-align: top;
+    }
+    .step-num {
+      display: inline-flex;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--red);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .protocol-badge {
+      display: inline-block;
+      background: rgba(26,115,200,0.15);
+      color: #7ab8f5;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.15rem 0.5rem;
+      border-radius: 3px;
+    }
+
+    /* ─── WORKFLOW ────────────────────────────────────── */
+    .workflow-stages {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+    .stage-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .stage-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+    .stage-card.s1::before { background: var(--blue-accent); }
+    .stage-card.s2::before { background: var(--gold); }
+    .stage-card.s3::before { background: var(--red); }
+    .stage-card.s4::before { background: #27ae60; }
+    .stage-number {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--border);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .stage-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+    .stage-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+    .stage-tasks {
+      list-style: none;
+      font-size: 0.83rem;
+      color: var(--text-muted);
+    }
+    .stage-tasks li {
+      padding: 0.3rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    .stage-tasks li:last-child { border-bottom: none; }
+    .stage-tasks li::before {
+      content: '→';
+      color: var(--text-muted);
+      flex-shrink: 0;
+      margin-top: 0.05rem;
+    }
+
+    /* ─── BUDGET ──────────────────────────────────────── */
+    .budget-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    @media (max-width: 640px) { .budget-grid { grid-template-columns: 1fr; } }
+    .budget-tier {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.75rem;
+    }
+    .budget-tier.recommended {
+      border-color: var(--gold);
+      background: rgba(232,184,75,0.04);
+    }
+    .rec-badge {
+      display: inline-block;
+      background: var(--gold);
+      color: #000;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.55rem;
+      border-radius: 3px;
+      margin-bottom: 0.75rem;
+    }
+    .tier-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .tier-range {
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+    .budget-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+    .budget-line:last-child { border-bottom: none; }
+    .budget-line .item { color: var(--text-muted); }
+    .budget-line .cost { font-weight: 600; }
+
+    /* ─── VENDORS ─────────────────────────────────────── */
+    .vendors-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+    .vendor-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .vendor-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: var(--navy-light);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+    .vendor-name { font-weight: 700; font-size: 1rem; margin-bottom: 0.2rem; }
+    .vendor-role { font-size: 0.75rem; color: var(--red); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; }
+    .vendor-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+    .vendor-contact { margin-top: 0.75rem; font-size: 0.8rem; }
+    .vendor-contact a { color: var(--blue-accent); text-decoration: none; }
+    .vendor-contact a:hover { text-decoration: underline; }
+
+    /* ─── FOOTER ──────────────────────────────────────── */
+    footer {
+      background: var(--navy-mid);
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    /* ─── ARC SECTION ────────────────────────────────── */
+    .arc-hero {
+      background: linear-gradient(135deg, #0d1b2a 0%, #0a1f12 50%, #0d1b2a 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+    }
+    .arc-hero .inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 0;
+    }
+    .arc-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(39,174,96,0.12);
+      border: 1px solid rgba(39,174,96,0.35);
+      color: #2ecc71;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.9rem;
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+    }
+    .arc-badge::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #2ecc71;
+      animation: pulse-green 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse-green {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+    .arc-title {
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .arc-title .arc-name {
+      color: #2ecc71;
+      font-style: italic;
+    }
+    .arc-intro {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin-bottom: 3rem;
+      line-height: 1.7;
+    }
+    .arc-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 2rem;
+      align-items: start;
+    }
+    @media (max-width: 900px) { .arc-layout { grid-template-columns: 1fr; } }
+
+    /* ARC role diagram */
+    .arc-diagram {
+      background: var(--navy-mid);
+      border: 1px solid rgba(39,174,96,0.2);
+      border-radius: 12px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+    .arc-node-group {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .arc-node {
+      background: var(--navy-light);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.4rem 0.85rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .arc-node.green {
+      border-color: #2ecc71;
+      color: #2ecc71;
+      background: rgba(39,174,96,0.08);
+      font-weight: 700;
+    }
+    .arc-node.center {
+      font-size: 1rem;
+      padding: 0.65rem 1.4rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+    }
+    .arc-connector {
+      width: 2px;
+      height: 28px;
+      background: rgba(39,174,96,0.3);
+      position: relative;
+      margin: 0 auto;
+    }
+    .arc-connector::after {
+      content: '▼';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(39,174,96,0.5);
+      font-size: 0.6rem;
+    }
+    .arc-diagram-label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+
+    /* ARC operator guide */
+    .arc-guide {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .arc-guide-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #2ecc71;
+      margin-bottom: 0.25rem;
+    }
+    .arc-step {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-left: 3px solid #2ecc71;
+      border-radius: 0 8px 8px 0;
+      padding: 1rem 1.1rem;
+    }
+    .arc-step-header {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-bottom: 0.4rem;
+    }
+    .arc-step-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(39,174,96,0.2);
+      border: 1px solid rgba(39,174,96,0.4);
+      color: #2ecc71;
+      font-size: 0.68rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .arc-step-name {
+      font-weight: 700;
+      font-size: 0.88rem;
+    }
+    .arc-step-timing {
+      margin-left: auto;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .arc-step-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ARC features strip */
+    .arc-features {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 3rem;
+    }
+    .arc-feature {
+      background: rgba(39,174,96,0.05);
+      border: 1px solid rgba(39,174,96,0.15);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .arc-feature-icon {
+      font-size: 1.4rem;
+      margin-bottom: 0.6rem;
+    }
+    .arc-feature-title {
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 0.35rem;
+      color: #2ecc71;
+    }
+    .arc-feature-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ARC connections table */
+    .arc-connections {
+      margin-top: 2.5rem;
+    }
+    .arc-conn-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #2ecc71;
+      margin-bottom: 1rem;
+    }
+    .arc-conn-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 0.75rem;
+    }
+    .arc-conn-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.1rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+    }
+    .conn-dir {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+    .conn-dir.in { background: rgba(26,115,200,0.2); color: #7ab8f5; }
+    .conn-dir.out { background: rgba(39,174,96,0.2); color: #2ecc71; }
+    .conn-system { font-weight: 700; font-size: 0.85rem; margin-bottom: 0.2rem; }
+    .conn-detail { font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; }
+
+    /* ─── RESPONSIVE ──────────────────────────────────── */
+    @media (max-width: 768px) {
+      nav .inner { gap: 0.2rem; }
+      nav a { display: none; }
+      .hero-stats { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="inner">
+    <div class="logo">CH<span>12</span> ELECTIONS</div>
+    <a href="#arc" style="color:#2ecc71;font-weight:700;">ARC</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#components">Components</a>
+    <a href="#signal-flow">Signal Flow</a>
+    <a href="#workflow">Workflow</a>
+    <a href="#budget">Budget</a>
+    <a href="#vendors">Vendors</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">Technical Production Brief</div>
+  <h1>Election Night<br><em>Broadcast Technology</em></h1>
+  <p>A complete system architecture for real-time results coverage — from field cameras and data ingest through to live on-air graphics and streaming output.</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="num">4</div>
+      <div class="label">Production Stages</div>
+    </div>
+    <div class="hero-stat">
+      <div class="num">12+</div>
+      <div class="label">System Components</div>
+    </div>
+    <div class="hero-stat">
+      <div class="num">$55K</div>
+      <div class="label">Max Budget</div>
+    </div>
+    <div class="hero-stat">
+      <div class="num">Live</div>
+      <div class="label">Real-Time Results</div>
+    </div>
+  </div>
+</div>
+
+<!-- ARC MAIN PLAYER -->
+<div class="arc-hero" id="arc">
+  <div class="inner">
+
+    <div class="arc-badge">Main Player</div>
+    <h2 class="arc-title">How to use <span class="arc-name">ARC</span><br>as the central results engine</h2>
+    <p class="arc-intro">
+      ARC (Automated Results Controller) is the nerve centre of the election night broadcast. It sits between the raw electoral data feed and every on-air graphics system, normalising results, triggering templates, and keeping the whole production in sync — without requiring a graphics operator to manually fire every update.
+    </p>
+
+    <div class="arc-layout">
+
+      <!-- Role diagram + step guide -->
+      <div>
+        <!-- Operator step-by-step -->
+        <div class="arc-guide-title">Operator Guide — Election Night</div>
+        <div class="arc-guide">
+
+          <div class="arc-step">
+            <div class="arc-step-header">
+              <div class="arc-step-num">1</div>
+              <div class="arc-step-name">Load the Election Project</div>
+              <div class="arc-step-timing">T–4 h</div>
+            </div>
+            <div class="arc-step-desc">Open ARC and select the election project file. Verify that all constituency IDs, party colour mappings, and seat thresholds are correctly configured. Import the current candidate list from the electoral commission CSV or API endpoint.</div>
+          </div>
+
+          <div class="arc-step">
+            <div class="arc-step-header">
+              <div class="arc-step-num">2</div>
+              <div class="arc-step-name">Connect the Data Feed</div>
+              <div class="arc-step-timing">T–2 h</div>
+            </div>
+            <div class="arc-step-desc">In ARC's Data Source panel, point the REST connector at the electoral commission live feed URL. Set the polling interval to 60 s pre-close and 15 s once polls close. Run a dry-fire test using last election's data to confirm all graphic templates populate correctly.</div>
+          </div>
+
+          <div class="arc-step">
+            <div class="arc-step-header">
+              <div class="arc-step-num">3</div>
+              <div class="arc-step-name">Assign Graphics Outputs</div>
+              <div class="arc-step-timing">T–2 h</div>
+            </div>
+            <div class="arc-step-desc">Map each ARC template type to its target output: seat-count full-screens → Viz Trio channel A; lower-third ticker → Viz Trio channel B; national map → Touchscreen Data Wall engine; social card export → file drop folder for the digital team. Test all mappings with the cue preview mode.</div>
+          </div>
+
+          <div class="arc-step">
+            <div class="arc-step-header">
+              <div class="arc-step-num">4</div>
+              <div class="arc-step-name">Arm Auto-Trigger Rules</div>
+              <div class="arc-step-timing">T–30 min</div>
+            </div>
+            <div class="arc-step-desc">Configure ARC's trigger logic: auto-fire a full-screen result graphic whenever a constituency declares, auto-update the running total bar on every data poll, and alert the director via tally light when a seat changes party. Set the "sensitivity" threshold to avoid false triggers from partial-count updates.</div>
+          </div>
+
+          <div class="arc-step">
+            <div class="arc-step-header">
+              <div class="arc-step-num">5</div>
+              <div class="arc-step-name">Go Live — Monitor &amp; Override</div>
+              <div class="arc-step-timing">Live night</div>
+            </div>
+            <div class="arc-step-desc">Once polls close, ARC runs autonomously — updating lower-thirds and maps with each data poll. The ARC operator sits on a secondary screen monitoring the queue. For urgent editorial overrides (e.g. hold a result the channel isn't yet ready to call), use the <strong>Hold</strong> button to pause auto-fire on a specific constituency without disrupting the rest of the queue.</div>
+          </div>
+
+          <div class="arc-step">
+            <div class="arc-step-header">
+              <div class="arc-step-num">6</div>
+              <div class="arc-step-name">Final Seat — End-of-Night Package</div>
+              <div class="arc-step-timing">Last result</div>
+            </div>
+            <div class="arc-step-desc">When the final seat is called, trigger ARC's "End-of-Night" macro: this fires the full national summary full-screen, exports a hi-res static results image for social, and writes the final JSON results file to the archive NAS. Log off the live data feed and save the session file for the post-mortem.</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Role diagram -->
+      <div>
+        <div class="arc-diagram">
+          <div class="arc-node-group">
+            <div class="arc-node">Electoral Commission API</div>
+            <div class="arc-node">Social Media Feed</div>
+          </div>
+          <div class="arc-connector"></div>
+          <div class="arc-node-group">
+            <div class="arc-node green center">ARC</div>
+          </div>
+          <div class="arc-connector"></div>
+          <div class="arc-node-group">
+            <div class="arc-node">Viz Trio</div>
+            <div class="arc-node">Data Wall</div>
+            <div class="arc-node">Social Export</div>
+          </div>
+          <div class="arc-connector"></div>
+          <div class="arc-node-group">
+            <div class="arc-node">ATEM (fill + key)</div>
+          </div>
+          <div class="arc-connector"></div>
+          <div class="arc-node-group">
+            <div class="arc-node">On-Air</div>
+          </div>
+          <div class="arc-diagram-label">ARC sits at the centre of<br>every results data path</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Feature grid -->
+    <div class="arc-features">
+      <div class="arc-feature">
+        <div class="arc-feature-icon">⚡</div>
+        <div class="arc-feature-title">Automatic Result Triggers</div>
+        <div class="arc-feature-desc">Fires the right graphic the moment a result lands in the data feed — no manual operator needed for routine declarations.</div>
+      </div>
+      <div class="arc-feature">
+        <div class="arc-feature-icon">🗂️</div>
+        <div class="arc-feature-title">Multi-Output Routing</div>
+        <div class="arc-feature-desc">Sends different graphic types to different outputs simultaneously — Viz Trio, touchscreen wall, and social export all from one cue.</div>
+      </div>
+      <div class="arc-feature">
+        <div class="arc-feature-icon">✋</div>
+        <div class="arc-feature-title">Editorial Hold &amp; Override</div>
+        <div class="arc-feature-desc">Editors can hold a result from going on-air while the channel confirms the call, without disrupting the rest of the queue.</div>
+      </div>
+      <div class="arc-feature">
+        <div class="arc-feature-icon">🔄</div>
+        <div class="arc-feature-title">Live Data Normalisation</div>
+        <div class="arc-feature-desc">Cleans and standardises raw electoral data — handles partial counts, recount flags, and late corrections before they reach graphics.</div>
+      </div>
+      <div class="arc-feature">
+        <div class="arc-feature-icon">🗺️</div>
+        <div class="arc-feature-title">Map &amp; Running Total Sync</div>
+        <div class="arc-feature-desc">Keeps the national map, seat counters, and vote-share charts in sync automatically on every polling cycle.</div>
+      </div>
+      <div class="arc-feature">
+        <div class="arc-feature-icon">📤</div>
+        <div class="arc-feature-title">Social &amp; Archive Export</div>
+        <div class="arc-feature-desc">Auto-generates formatted result cards for social platforms and writes the final results JSON to archive at end-of-night.</div>
+      </div>
+    </div>
+
+    <!-- System connections -->
+    <div class="arc-connections">
+      <div class="arc-conn-title">ARC System Connections</div>
+      <div class="arc-conn-grid">
+
+        <div class="arc-conn-card">
+          <div class="conn-dir in">IN</div>
+          <div>
+            <div class="conn-system">Electoral Commission API</div>
+            <div class="conn-detail">REST/JSON polled every 15–60 s. ARC normalises constituency codes, candidate names, and vote totals.</div>
+          </div>
+        </div>
+
+        <div class="arc-conn-card">
+          <div class="conn-dir in">IN</div>
+          <div>
+            <div class="conn-system">Rundown System (Mosart)</div>
+            <div class="conn-detail">ARC receives segment cues from Viz Mosart so graphics fire in sync with the programme rundown.</div>
+          </div>
+        </div>
+
+        <div class="arc-conn-card">
+          <div class="conn-dir out">OUT</div>
+          <div>
+            <div class="conn-system">Viz Trio (Channel A &amp; B)</div>
+            <div class="conn-detail">Full-screen result packs and lower-thirds fired via Viz Trio's MOS/TCP command interface.</div>
+          </div>
+        </div>
+
+        <div class="arc-conn-card">
+          <div class="conn-dir out">OUT</div>
+          <div>
+            <div class="conn-system">Touchscreen Data Wall</div>
+            <div class="conn-detail">ARC pushes updated map and chart data as JSON to the wall's local web app on each poll cycle.</div>
+          </div>
+        </div>
+
+        <div class="arc-conn-card">
+          <div class="conn-dir out">OUT</div>
+          <div>
+            <div class="conn-system">Social Export Folder</div>
+            <div class="conn-detail">Rendered PNG/MP4 result cards dropped to a watched folder; digital team's CMS picks them up automatically.</div>
+          </div>
+        </div>
+
+        <div class="arc-conn-card">
+          <div class="conn-dir out">OUT</div>
+          <div>
+            <div class="conn-system">Archive NAS</div>
+            <div class="conn-detail">Final results JSON and session log written at end-of-night for compliance and post-broadcast analysis.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ARCHITECTURE -->
+<section id="architecture">
+  <h2><span class="accent">01.</span> System Architecture</h2>
+  <p class="section-sub">End-to-end signal flow from sources to transmission</p>
+
+  <div class="arch-diagram">
+    <div class="arch-layers">
+
+      <div class="arch-layer">
+        <div class="layer-label">Sources</div>
+        <div class="layer-nodes">
+          <div class="node primary">Studio Camera ×2</div>
+          <div class="node primary">Remote Camera ×2</div>
+          <div class="node">Presenter Mic</div>
+          <div class="node">Results Data Feed</div>
+          <div class="node">Social Media API</div>
+        </div>
+      </div>
+
+      <div class="arch-arrow">↓</div>
+
+      <div class="arch-layer">
+        <div class="layer-label">Ingest</div>
+        <div class="layer-nodes">
+          <div class="node blue">ATEM Constellation 8K (Vision Mixer)</div>
+          <div class="node blue">HyperDeck Studio (Recording)</div>
+          <div class="node blue">Election Data Aggregator</div>
+        </div>
+      </div>
+
+      <div class="arch-arrow">↓</div>
+
+      <div class="arch-layer">
+        <div class="layer-label">Results Engine</div>
+        <div class="layer-nodes">
+          <div class="node" style="border-color:#2ecc71;color:#2ecc71;font-weight:700;">ARC — Automated Results Controller</div>
+        </div>
+      </div>
+
+      <div class="arch-arrow">↓</div>
+
+      <div class="arch-layer">
+        <div class="layer-label">Graphics</div>
+        <div class="layer-nodes">
+          <div class="node highlight">Viz Trio (Character Generator)</div>
+          <div class="node highlight">Viz Mosart (Automation)</div>
+          <div class="node highlight">Unreal Engine Virtual Set</div>
+          <div class="node highlight">Touchscreen Data Wall</div>
+        </div>
+      </div>
+
+      <div class="arch-arrow">↓</div>
+
+      <div class="arch-layer">
+        <div class="layer-label">Master Control</div>
+        <div class="layer-nodes">
+          <div class="node primary">Master Control Room</div>
+          <div class="node">Audio Mixing Desk</div>
+          <div class="node">Intercom / IFB System</div>
+          <div class="node">Confidence Monitors</div>
+        </div>
+      </div>
+
+      <div class="arch-arrow">↓</div>
+
+      <div class="arch-layer">
+        <div class="layer-label">Output</div>
+        <div class="layer-nodes">
+          <div class="node primary">Broadcast Transmitter</div>
+          <div class="node blue">OTT / Streaming Encoder</div>
+          <div class="node blue">Social Clip Export</div>
+          <div class="node">Archive / NAS Storage</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- COMPONENTS -->
+<section id="components">
+  <h2><span class="accent">02.</span> Component Breakdown</h2>
+  <p class="section-sub">Hardware and software for every layer of the stack</p>
+
+  <div class="components-grid">
+
+    <div class="component-card">
+      <div class="comp-header">
+        <div class="comp-icon red">📷</div>
+        <div>
+          <div class="comp-name">Blackmagic URSA Broadcast G2</div>
+          <div class="comp-vendor">Blackmagic Design</div>
+        </div>
+      </div>
+      <div class="comp-desc">6K broadcast camera with B4 lens mount compatibility. Ideal for studio and remote coverage. Built-in ND filters, HD/UHD output via SDI.</div>
+      <span class="comp-price">~$3,995 / unit</span>
+      <span class="comp-tag">Hardware</span>
+    </div>
+
+    <div class="component-card">
+      <div class="comp-header">
+        <div class="comp-icon blue">🎚️</div>
+        <div>
+          <div class="comp-name">ATEM Constellation 8K</div>
+          <div class="comp-vendor">Blackmagic Design</div>
+        </div>
+      </div>
+      <div class="comp-desc">Flagship live production switcher with 40 inputs, SuperSource, multiviewer outputs, and Fairlight audio. Central hub for all video sources.</div>
+      <span class="comp-price">~$9,995</span>
+      <span class="comp-tag">Hardware</span>
+    </div>
+
+    <div class="component-card">
+      <div class="comp-header">
+        <div class="comp-icon gold">📊</div>
+        <div>
+          <div class="comp-name">Viz Trio</div>
+          <div class="comp-vendor">Vizrt</div>
+        </div>
+      </div>
+      <div class="comp-desc">Real-time character generator for live election graphics. Data-driven templates for vote tallies, seat counts, result bars, and running maps.</div>
+      <span class="comp-price">~$8,000–$15,000 / yr</span>
+      <span class="comp-tag">Software</span>
+    </div>
+
+    <div class="component-card">
+      <div class="comp-header">
+        <div class="comp-icon purple">🤖</div>
+        <div>
+          <div class="comp-name">Viz Mosart</div>
+          <div class="comp-vendor">Vizrt</div>
+        </div>
+      </div>
+      <div class="comp-desc">Broadcast automation system to sequence rundowns, trigger graphics, and control cameras. Reduces crew load on live night by automating repetitive transitions.</div>
+      <span class="comp-price">~$10,000–$20,000 / yr</span>
+      <span class="comp-tag">Software</span>
+    </div>
+
+    <div class="component-card">
+      <div class="comp-header">
+        <div class="comp-icon green">🌐</div>
+        <div>
+          <div class="comp-name">Unreal Engine Virtual Studio</div>
+          <div class="comp-vendor">Epic Games</div>
+        </div>
+      </div>
+      <div class="comp-desc">Real-time 3D virtual set for augmented studio background. Used with LED volume or compositing to add depth to the election studio environment.</div>
+      <span class="comp-price">Free engine + integration costs</span>
+      <span class="comp-tag">Software</span>
+    </div>
+
+    <div class="component-card">
+      <div class="comp-header">
+        <div class="comp-icon blue">💾</div>
+        <div>
+          <div class="comp-name">HyperDeck Studio HD Pro</div>
+          <div class="comp-vendor">Blackmagic Design</div>
+        </div>
+      </div>
+      <div class="comp-desc">Network-attached broadcast deck for ISO recording of all feeds. Supports H.265 and ProRes. Enables post-show clip export and archiving.</div>
+      <span class="comp-price">~$495 / unit</span>
+      <span class="comp-tag">Hardware</span>
+    </div>
+
+    <div class="component-card">
+      <div class="comp-header">
+        <div class="comp-icon red">📡</div>
+        <div>
+          <div class="comp-name">LiveU LU800 / LU600</div>
+          <div class="comp-vendor">LiveU</div>
+        </div>
+      </div>
+      <div class="comp-desc">Cellular bonding units for remote correspondents at counting centres. Bonds up to 14 cellular/WiFi/LAN channels for reliable live contribution.</div>
+      <span class="comp-price">~$8,000–$12,000 / unit</span>
+      <span class="comp-tag">Hardware</span>
+    </div>
+
+    <div class="component-card">
+      <div class="comp-header">
+        <div class="comp-icon gold">🖥️</div>
+        <div>
+          <div class="comp-name">Viz One / Data Dashboard</div>
+          <div class="comp-vendor">Vizrt</div>
+        </div>
+      </div>
+      <div class="comp-desc">Media asset management and results aggregation platform. Connects to official electoral data APIs and formats them for Viz Trio graphic templates.</div>
+      <span class="comp-price">Custom licensing</span>
+      <span class="comp-tag">Software</span>
+    </div>
+
+    <div class="component-card">
+      <div class="comp-header">
+        <div class="comp-icon green">🔊</div>
+        <div>
+          <div class="comp-name">Yamaha QL5 Audio Console</div>
+          <div class="comp-vendor">Yamaha</div>
+        </div>
+      </div>
+      <div class="comp-desc">Digital mixing console with 64 inputs. Handles studio mics, remote audio, and IFB (interrupted foldback) for presenter earpieces.</div>
+      <span class="comp-price">~$12,000</span>
+      <span class="comp-tag">Hardware</span>
+    </div>
+
+    <div class="component-card">
+      <div class="comp-header">
+        <div class="comp-icon purple">📺</div>
+        <div>
+          <div class="comp-name">Elemental Live / AWS MediaLive</div>
+          <div class="comp-vendor">AWS / Elemental</div>
+        </div>
+      </div>
+      <div class="comp-desc">Live transcoding engine for OTT/streaming output. Packages the broadcast feed into HLS/DASH for web, mobile, and connected TV delivery.</div>
+      <span class="comp-price">~$800–$2,500 / event</span>
+      <span class="comp-tag">Cloud</span>
+    </div>
+
+    <div class="component-card">
+      <div class="comp-header">
+        <div class="comp-icon blue">🗂️</div>
+        <div>
+          <div class="comp-name">Ross Video XPression</div>
+          <div class="comp-vendor">Ross Video</div>
+        </div>
+      </div>
+      <div class="comp-desc">Alternative CG / motion graphics system. Excellent for lower-thirds, score bugs, and animated result packages. Strong alternative to Viz Trio.</div>
+      <span class="comp-price">~$6,000–$12,000</span>
+      <span class="comp-tag">Software</span>
+    </div>
+
+    <div class="component-card">
+      <div class="comp-header">
+        <div class="comp-icon red">🖱️</div>
+        <div>
+          <div class="comp-name">Touchscreen Data Wall</div>
+          <div class="comp-vendor">Custom / Dataton WATCHOUT</div>
+        </div>
+      </div>
+      <div class="comp-desc">Large-format interactive display (65"–85") driven by a custom data app. Presenters navigate live maps and charts on-camera for engaging results coverage.</div>
+      <span class="comp-price">~$5,000–$15,000</span>
+      <span class="comp-tag">Hardware + Software</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- SIGNAL FLOW -->
+<section id="signal-flow">
+  <h2><span class="accent">03.</span> Signal Flow</h2>
+  <p class="section-sub">Step-by-step path data takes from source to viewer</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Stage</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Protocol / Format</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="step-num">1</span></td>
+          <td><strong>Camera Capture</strong></td>
+          <td>Studio &amp; Remote Cameras</td>
+          <td>ATEM Constellation</td>
+          <td><span class="protocol-badge">SDI 12G</span></td>
+          <td>4K/UHD or HD depending on channel standard</td>
+        </tr>
+        <tr>
+          <td><span class="step-num">2</span></td>
+          <td><strong>Remote Contribution</strong></td>
+          <td>Field LiveU Units</td>
+          <td>LiveU Server → ATEM</td>
+          <td><span class="protocol-badge">LRT / SRT</span></td>
+          <td>Bonded cellular via LiveU cloud infrastructure</td>
+        </tr>
+        <tr>
+          <td><span class="step-num">3</span></td>
+          <td><strong>Data Ingest</strong></td>
+          <td>Electoral Commission API</td>
+          <td>Data Aggregator → Viz Trio</td>
+          <td><span class="protocol-badge">REST / JSON</span></td>
+          <td>Polled every 30–60 s; auto-triggers graphic updates</td>
+        </tr>
+        <tr>
+          <td><span class="step-num">4</span></td>
+          <td><strong>Graphics Render</strong></td>
+          <td>Viz Trio Templates</td>
+          <td>ATEM via fill + key</td>
+          <td><span class="protocol-badge">SDI (RGBA)</span></td>
+          <td>Clean key over video; animated data bars and maps</td>
+        </tr>
+        <tr>
+          <td><span class="step-num">5</span></td>
+          <td><strong>Virtual Set</strong></td>
+          <td>Unreal Engine</td>
+          <td>ATEM (downstream key)</td>
+          <td><span class="protocol-badge">NDI / SDI</span></td>
+          <td>Camera tracking via zero-latency encoder</td>
+        </tr>
+        <tr>
+          <td><span class="step-num">6</span></td>
+          <td><strong>Vision Mixing</strong></td>
+          <td>ATEM Constellation</td>
+          <td>Master Control Room</td>
+          <td><span class="protocol-badge">SDI 12G</span></td>
+          <td>Program, preview, and multiviewer outputs</td>
+        </tr>
+        <tr>
+          <td><span class="step-num">7</span></td>
+          <td><strong>Audio Mix</strong></td>
+          <td>Yamaha QL5</td>
+          <td>MCR (embedded into SDI)</td>
+          <td><span class="protocol-badge">AES / AES67</span></td>
+          <td>Mix minus for remote guests; IFB to presenters</td>
+        </tr>
+        <tr>
+          <td><span class="step-num">8</span></td>
+          <td><strong>ISO Recording</strong></td>
+          <td>ATEM multi-output</td>
+          <td>HyperDeck Studio</td>
+          <td><span class="protocol-badge">H.265 / ProRes</span></td>
+          <td>All ISO feeds recorded for post and legal archive</td>
+        </tr>
+        <tr>
+          <td><span class="step-num">9</span></td>
+          <td><strong>Broadcast TX</strong></td>
+          <td>MCR Program Out</td>
+          <td>Transmitter / Uplink</td>
+          <td><span class="protocol-badge">DVB-T / DVB-S2</span></td>
+          <td>Primary over-the-air and satellite path</td>
+        </tr>
+        <tr>
+          <td><span class="step-num">10</span></td>
+          <td><strong>OTT Packaging</strong></td>
+          <td>MCR Program Out</td>
+          <td>AWS MediaLive → CDN</td>
+          <td><span class="protocol-badge">HLS / DASH</span></td>
+          <td>Sub-30 s latency for web and mobile streaming</td>
+        </tr>
+        <tr>
+          <td><span class="step-num">11</span></td>
+          <td><strong>Social Clips</strong></td>
+          <td>HyperDeck Archive</td>
+          <td>Newsroom / Social Team</td>
+          <td><span class="protocol-badge">H.264 MP4</span></td>
+          <td>Auto-clipped highlights pushed to digital team</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- WORKFLOW -->
+<section id="workflow">
+  <h2><span class="accent">04.</span> Election Night Workflow</h2>
+  <p class="section-sub">Four stages from preparation to live output</p>
+
+  <div class="workflow-stages">
+
+    <div class="stage-card s1">
+      <div class="stage-number">01</div>
+      <div class="stage-title">Pre-Production</div>
+      <div class="stage-time">T-72 h to T-4 h before polls close</div>
+      <ul class="stage-tasks">
+        <li>Load constituency templates into Viz Trio</li>
+        <li>Configure data API polling for electoral commission</li>
+        <li>Set up and test virtual studio environment in Unreal</li>
+        <li>Commission remote LiveU units at counting centres</li>
+        <li>Prepare ATEM macros for common transitions</li>
+        <li>Rehearse touchscreen data wall with presenter</li>
+      </ul>
+    </div>
+
+    <div class="stage-card s2">
+      <div class="stage-number">02</div>
+      <div class="stage-title">Build-Up Coverage</div>
+      <div class="stage-time">T-4 h to polls close</div>
+      <ul class="stage-tasks">
+        <li>Go live with studio programme — pre-analysis</li>
+        <li>Confirm all remote camera signals active</li>
+        <li>Run Viz Mosart automation dress rehearsal</li>
+        <li>Activate OTT stream; verify CDN delivery</li>
+        <li>Social team begins short-form content output</li>
+        <li>Technical checks on audio IFB for field crews</li>
+      </ul>
+    </div>
+
+    <div class="stage-card s3">
+      <div class="stage-number">03</div>
+      <div class="stage-title">Live Results Night</div>
+      <div class="stage-time">Polls close → final seat called</div>
+      <ul class="stage-tasks">
+        <li>Data API triggers automatic graphic updates in Viz Trio</li>
+        <li>Director calls shots via ATEM with Mosart assist</li>
+        <li>Results maps updated on touchscreen data wall</li>
+        <li>Remote live shots cut in from counting centres</li>
+        <li>Breaking results lower-thirds pushed in real time</li>
+        <li>HyperDecks record all ISO feeds continuously</li>
+      </ul>
+    </div>
+
+    <div class="stage-card s4">
+      <div class="stage-number">04</div>
+      <div class="stage-title">Post-Production Wrap</div>
+      <div class="stage-time">Final seat called → T+6 h</div>
+      <ul class="stage-tasks">
+        <li>Final results package rendered and archived</li>
+        <li>Clip team exports highlights for social platforms</li>
+        <li>All ISO recordings transferred to NAS storage</li>
+        <li>Debrief: flag any data sync issues for next time</li>
+        <li>OTT stream kept live for VOD replay window</li>
+        <li>Equipment strike and kit return to stores</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- BUDGET -->
+<section id="budget">
+  <h2><span class="accent">05.</span> Budget Estimate</h2>
+  <p class="section-sub">Ranges depend on what Channel 12 already owns</p>
+
+  <div class="budget-grid">
+
+    <div class="budget-tier">
+      <div class="tier-name">Essential Setup</div>
+      <div class="tier-range">$20,000 – $35,000</div>
+      <div class="budget-line"><span class="item">Cameras (×2 studio)</span><span class="cost">$8,000</span></div>
+      <div class="budget-line"><span class="item">ATEM vision mixer</span><span class="cost">$10,000</span></div>
+      <div class="budget-line"><span class="item">Viz Trio (1-year licence)</span><span class="cost">$8,000</span></div>
+      <div class="budget-line"><span class="item">HyperDeck recorders</span><span class="cost">$1,500</span></div>
+      <div class="budget-line"><span class="item">Streaming / OTT</span><span class="cost">$2,500</span></div>
+      <div class="budget-line"><span class="item">Install &amp; integration</span><span class="cost">$5,000</span></div>
+    </div>
+
+    <div class="budget-tier recommended">
+      <div class="rec-badge">Recommended</div>
+      <div class="tier-name">Full Production</div>
+      <div class="tier-range">$40,000 – $55,000+</div>
+      <div class="budget-line"><span class="item">Cameras (×4 studio + remote)</span><span class="cost">$20,000</span></div>
+      <div class="budget-line"><span class="item">ATEM Constellation 8K</span><span class="cost">$10,000</span></div>
+      <div class="budget-line"><span class="item">Viz Trio + Mosart bundle</span><span class="cost">$22,000</span></div>
+      <div class="budget-line"><span class="item">LiveU remote units (×2)</span><span class="cost">$20,000</span></div>
+      <div class="budget-line"><span class="item">Touchscreen data wall</span><span class="cost">$10,000</span></div>
+      <div class="budget-line"><span class="item">Audio console + comms</span><span class="cost">$14,000</span></div>
+      <div class="budget-line"><span class="item">Unreal integration</span><span class="cost">$8,000</span></div>
+      <div class="budget-line"><span class="item">OTT, install &amp; contingency</span><span class="cost">$8,000</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- VENDORS -->
+<section id="vendors">
+  <h2><span class="accent">06.</span> Key Vendor Contacts</h2>
+  <p class="section-sub">Primary suppliers and integrators for this system</p>
+
+  <div class="vendors-grid">
+
+    <div class="vendor-card">
+      <div class="vendor-logo">🎬</div>
+      <div>
+        <div class="vendor-name">Vizrt</div>
+        <div class="vendor-role">Graphics &amp; Automation</div>
+        <div class="vendor-desc">Viz Trio CG, Viz Mosart automation, and Viz One MAM. The industry standard for real-time broadcast election graphics.</div>
+        <div class="vendor-contact">vizrt.com — contact regional sales for MENA / Africa pricing</div>
+      </div>
+    </div>
+
+    <div class="vendor-card">
+      <div class="vendor-logo">⚫</div>
+      <div>
+        <div class="vendor-name">Blackmagic Design</div>
+        <div class="vendor-role">Cameras, Switchers &amp; Recorders</div>
+        <div class="vendor-desc">URSA Broadcast cameras, ATEM vision mixers, HyperDeck recorders. Excellent value-for-money broadcast hardware with strong ecosystem.</div>
+        <div class="vendor-contact">blackmagicdesign.com — resellers available locally in most markets</div>
+      </div>
+    </div>
+
+    <div class="vendor-card">
+      <div class="vendor-logo">📡</div>
+      <div>
+        <div class="vendor-name">LiveU</div>
+        <div class="vendor-role">Remote Contribution</div>
+        <div class="vendor-desc">LU800 / LU600 cellular bonding for reliable live shots from counting centres. Units can be rented per-event through LiveU's global network.</div>
+        <div class="vendor-contact">liveu.tv — enquire about election event rental packages</div>
+      </div>
+    </div>
+
+    <div class="vendor-card">
+      <div class="vendor-logo">🎮</div>
+      <div>
+        <div class="vendor-name">Epic Games / Unreal</div>
+        <div class="vendor-role">Virtual Studio Engine</div>
+        <div class="vendor-desc">Unreal Engine 5 for real-time virtual studio and AR graphics. Engine is free; budget covers integration, nDisplay setup, and custom asset creation.</div>
+        <div class="vendor-contact">unrealengine.com/broadcast — partner programme for media orgs</div>
+      </div>
+    </div>
+
+    <div class="vendor-card">
+      <div class="vendor-logo">☁️</div>
+      <div>
+        <div class="vendor-name">AWS Elemental</div>
+        <div class="vendor-role">OTT &amp; Streaming</div>
+        <div class="vendor-desc">MediaLive + MediaPackage for cloud-based live transcoding and HLS/DASH packaging. Scales automatically for peak election-night audience spikes.</div>
+        <div class="vendor-contact">aws.amazon.com/media-services — pay-per-use, no long-term commitment needed</div>
+      </div>
+    </div>
+
+    <div class="vendor-card">
+      <div class="vendor-logo">🔧</div>
+      <div>
+        <div class="vendor-name">Systems Integrator</div>
+        <div class="vendor-role">Installation &amp; Support</div>
+        <div class="vendor-desc">A local or regional broadcast systems integrator to handle cable runs, rack builds, testing, and live-night on-call support. Budget 10–15% of hardware total.</div>
+        <div class="vendor-contact">Request proposals from 2–3 integrators; compare support SLAs</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  Channel 12 — Election Broadcast Technology Brief &nbsp;|&nbsp; Prepared for technical and production teams &nbsp;|&nbsp; 2026
+</footer>
+
+</body>
+</html>
